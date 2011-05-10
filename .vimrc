@@ -17,9 +17,9 @@
 
 " General {
 	set background=dark         " Assume a dark background
-    if !has('win32') && !has('win64')
-        set term=$TERM       " Make arrow and other keys work
-    endif
+    "if !has('win32') && !has('win64')
+    "   set term=$TERM       " Make arrow and other keys work
+    "endif
 	filetype plugin indent on  	" Automatically detect file types.
 	syntax on 					" syntax highlighting
 	set mouse=a					" automatically enable mouse usage
@@ -54,8 +54,13 @@
 
 " Vim UI {
 	colorscheme molokai                   " load a colorscheme
-	set tabpagemax=15 				" only show 15 tabs
-	set showmode                   	" display the current mode
+    let g:zenburn_high_Contrast = 1
+    let g:liquidcarbon_high_contrast = 1
+    let g:molokai_original = 0
+    set t_Co=256
+	set tabpagemax=15               " only show 15 tabs
+	set showmode                    " display the current mode
+    set smarttab
 
 	set cursorline  				" highlight current line
 	hi cursorline guibg=#333333 	" highlight bg color of current line
@@ -316,10 +321,25 @@ if has("gui_running")
    " No menus and no toolbar
    set guioptions-=m
    set guioptions-=T
-   set transparency=5          " Make the window slightly transparent
+   " set transparency=5          " Make the window slightly transparent
    let g:obviousModeInsertHi = "guibg=Black guifg=White"
 else
    let g:obviousModeInsertHi = "ctermfg=253 ctermbg=16"
+endif
+
+if has("win32") || has("win64")
+   set guifont=Envy\ Code\ R:h12.5
+   let Tlist_Ctags_Cmd = 'e:\Tools\ctags.exe'
+   set directory=$TMP
+   if !has("gui_running")
+      colorscheme slate
+   end
+elseif has("mac")
+   set directory=/tmp
+   set guifont=Envy\ Code\ R:h14
+else
+   set directory=/tmp
+   set guifont=Envy\ Code\ R\ 14
 endif
 " }
 
