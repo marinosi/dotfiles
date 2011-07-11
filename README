@@ -3,3 +3,8 @@ README
 
 A collection of dotfiles for personal use. Enjoy --
 
+Instructions:
+git clone https://marinosi@github.com/marinosi/dotfiles.git
+cd dotfiles
+git submodule init
+git submodule update
