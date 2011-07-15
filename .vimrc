@@ -1,3 +1,10 @@
+" .vimrc
+" This vimrc was created thanks to the work of:
+" Steve Francia (spf13)
+" Michael Sanders (msanders42)
+" Ilias Marinos (marinosi@ceid.upatras.gr)
+"
+
 " Environment {
 	" Basics {
         set runtimepath=~/.vim,$VIMRUNTIME,~/.vim/after
