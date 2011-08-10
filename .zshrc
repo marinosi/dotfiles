@@ -1,6 +1,7 @@
 # Filename:      /etc/zsh/zshrc
 # Purpose:       config file for zsh (z shell)
 # Authors:       grml-team (grml.org), (c) Michael Prokop <mika@grml.org>
+# Contributed:   Ilias Marinos <marinosi@ceid.upatras.gr>
 # Bug-Reports:   see http://grml.org/bugs/
 # License:       This file is licensed under the GPL v2.
 ################################################################################
