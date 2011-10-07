@@ -109,9 +109,8 @@
 	set scrolloff=3 				" minimum lines to keep above and below cursor
 	set foldenable  				" auto fold code
 	set gdefault					" the /g flag on :s substitutions by default
-    set list
+    set nolist
     set listchars=tab:>.,trail:.,extends:#,nbsp:. " Highlight problematic whitespace
-
 
 " }
 
@@ -150,14 +149,35 @@
     nnoremap j gj
     nnoremap k gk
 
+    " Very big lines
+    nnoremap <silent> <Leader>l
+          \ :if exists('w:long_line_match') <Bar>
+          \   silent! call matchdelete(w:long_line_match) <Bar>
+          \   unlet w:long_line_match <Bar>
+          \ elseif &textwidth > 0 <Bar>
+          \   let w:long_line_match = matchadd('ErrorMsg', '\%>'.&tw.'v.\+', -1) <Bar>
+          \ else <Bar>
+          \   let w:long_line_match = matchadd('ErrorMsg', '\%>80v.\+', -1) <Bar>
+          \ endif<CR>
+
+    nnoremap <silent> <Leader>s
+        \ :if exists('g:Highlight_problematic_spaces') <Bar>
+            \ silent! call matchdelete(g:Highlight_problematic_spaces) <Bar>
+            \ unlet g:Highlight_problematic_spaces <Bar>
+            \ set nolist <Bar>
+        \ else <Bar>
+            \ let g:Highlight_problematic_spaces = true <Bar>
+            \ set list <Bar>
+        \ endif<CR>
+
 	" The following two lines conflict with moving to top and bottom of the
 	" screen
 	" If you prefer that functionality, comment them out.
-	map <S-H> gT          
+	map <S-H> gT
 	map <S-L> gt
 
 	" Stupid shift key fixes
-	cmap W w 						
+	" cmap W w 						
 	cmap WQ wq
 	cmap wQ wq
 	cmap Q q
@@ -278,8 +298,8 @@
 		inoremap <expr> <C-u>      pumvisible() ? "\<PageUp>\<C-p>\<C-n>" : "\<C-u>"
 
         " and make sure that it doesn't break supertab
-        let g:SuperTabCrMapping = 0
-        
+		let g:SuperTabCrMapping = 0
+
 		" automatically open and close the popup menu / preview window
 		au CursorMovedI,InsertLeave * if pumvisible() == 0|silent! pclose|endif
 		set completeopt=menu,preview,longest
