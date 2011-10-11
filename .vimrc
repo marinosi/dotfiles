@@ -166,7 +166,7 @@
             \ unlet g:Highlight_problematic_spaces <Bar>
             \ set nolist <Bar>
         \ else <Bar>
-            \ let g:Highlight_problematic_spaces = true <Bar>
+            \ let g:Highlight_problematic_spaces = 1 <Bar>
             \ set list <Bar>
         \ endif<CR>
 
