@@ -22,3 +22,6 @@
 [submodule ".vim/bundle/easytags"]
 	path = .vim/bundle/easytags
 	url = git://github.com/xolox/vim-easytags
+[submodule ".vim/bundle/unimpaired"]
+	path = .vim/bundle/unimpaired
+	url = git://github.com/tpope/vim-unimpaired.git
