@@ -7,10 +7,10 @@
 
 " Environment {
 	" Basics {
-        set runtimepath=~/.vim,$VIMRUNTIME,~/.vim/after
+		set runtimepath=~/.vim,$VIMRUNTIME,~/.vim/after
 		set nocompatible 		" must be first line
 		set background=dark     " Assume a dark background
-        set t_Co=256
+		set t_Co=256
 	" }
 
 	" Setup Bundle Support {
@@ -24,16 +24,16 @@
 
 " General {
 	set background=dark         " Assume a dark background
-    "if !has('win32') && !has('win64')
-    "   set term=$TERM       " Make arrow and other keys work
-    "endif
+	"if !has('win32') && !has('win64')
+	"   set term=$TERM       " Make arrow and other keys work
+	"endif
 	filetype plugin indent on  	" Automatically detect file types.
 	syntax on 					" syntax highlighting
 	set mouse=a					" automatically enable mouse usage
 	"set autochdir 				" always switch to the current file directory.. Messes with some plugins, best left commented out
 	" not every vim is compiled with this, use the following line instead
 	" If you use command-t plugin, it conflicts with this, comment it out.
-     "autocmd BufEnter * if bufname("") !~ "^\[A-Za-z0-9\]*://" | lcd %:p:h | endif
+	"autocmd BufEnter * if bufname("") !~ "^\[A-Za-z0-9\]*://" | lcd %:p:h | endif
 	scriptencoding utf-8
 
 	" set autowrite                  " automatically write a file when leaving a modified buffer
@@ -42,14 +42,14 @@
 	set virtualedit=onemore 	   	" allow for cursor beyond last character
 	set history=1000  				" Store a ton of history (default is 20)
 	set nospell 		 	        	" spell checking off
-	
+
 	" Setting up the directories {
 		set backup 						" backups are nice ...
-        " Moved to function at bottom of the file
+		" Moved to function at bottom of the file
 		"set backupdir=$HOME/.vimbackup//  " but not when they clog .
 		"set directory=$HOME/.vimswap// 	" Same for swap files
 		"set viewdir=$HOME/.vimviews// 	" same for view files
-		
+
 		"" Creating directories if they don't exist
 		"silent execute '!mkdir -p $HVOME/.vimbackup'
 		"silent execute '!mkdir -p $HOME/.vimswap'
@@ -61,13 +61,13 @@
 
 " Vim UI {
 	colorscheme molokai                   " load a colorscheme
-    let g:zenburn_high_Contrast = 1
-    let g:liquidcarbon_high_contrast = 1
-    let g:molokai_original = 0
-    set t_Co=256
+	let g:zenburn_high_Contrast = 1
+	let g:liquidcarbon_high_contrast = 1
+	let g:molokai_original = 0
+	set t_Co=256
 	set tabpagemax=15               " only show 15 tabs
 	set showmode                    " display the current mode
-    set smarttab
+	set smarttab
 
 	set cursorline  				" highlight current line
 	hi cursorline guibg=#333333 	" highlight bg color of current line
@@ -81,7 +81,7 @@
 	endif
 
 	if has('statusline')
-        set laststatus=2
+		set laststatus=2
 
 		" Broken down into easily includeable segments
 		set statusline=%<%f\    " Filename
@@ -109,8 +109,8 @@
 	set scrolloff=3 				" minimum lines to keep above and below cursor
 	set foldenable  				" auto fold code
 	set gdefault					" the /g flag on :s substitutions by default
-    set nolist
-    set listchars=tab:>.,trail:.,extends:#,nbsp:. " Highlight problematic whitespace
+	set nolist
+	set listchars=tab:>.,trail:.,extends:#,nbsp:. " Highlight problematic whitespace
 
 " }
 
@@ -134,8 +134,8 @@
 	"location
 	let mapleader = ','
 
-    " Making it so ; works like : for commands. Saves typing and eliminates :W style typos due to lazy holding shift.
-    nnoremap ; :
+	" Making it so ; works like : for commands. Saves typing and eliminates :W style typos due to lazy holding shift.
+	nnoremap ; :
 
 
 	" Easier moving in tabs and windows
@@ -144,31 +144,31 @@
 	map <C-L> <C-W>l<C-W>_
 	map <C-H> <C-W>h<C-W>_
 	map <C-K> <C-W>k<C-W>_
-	
-    " Wrapped lines goes down/up to next row, rather than next line in file.
-    nnoremap j gj
-    nnoremap k gk
 
-    " Very big lines
-    nnoremap <silent> <Leader>l
-          \ :if exists('w:long_line_match') <Bar>
-          \   silent! call matchdelete(w:long_line_match) <Bar>
-          \   unlet w:long_line_match <Bar>
-          \ elseif &textwidth > 0 <Bar>
-          \   let w:long_line_match = matchadd('ErrorMsg', '\%>'.&tw.'v.\+', -1) <Bar>
-          \ else <Bar>
-          \   let w:long_line_match = matchadd('ErrorMsg', '\%>80v.\+', -1) <Bar>
-          \ endif<CR>
+	" Wrapped lines goes down/up to next row, rather than next line in file.
+	nnoremap j gj
+	nnoremap k gk
 
-    nnoremap <silent> <Leader>s
-        \ :if exists('g:Highlight_problematic_spaces') <Bar>
-            \ silent! call matchdelete(g:Highlight_problematic_spaces) <Bar>
-            \ unlet g:Highlight_problematic_spaces <Bar>
-            \ set nolist <Bar>
-        \ else <Bar>
-            \ let g:Highlight_problematic_spaces = 1 <Bar>
-            \ set list <Bar>
-        \ endif<CR>
+	" Very big lines
+	nnoremap <silent> <Leader>l
+				\ :if exists('w:long_line_match') <Bar>
+				\   silent! call matchdelete(w:long_line_match) <Bar>
+				\   unlet w:long_line_match <Bar>
+				\ elseif &textwidth > 0 <Bar>
+				\   let w:long_line_match = matchadd('ErrorMsg', '\%>'.&tw.'v.\+', -1) <Bar>
+				\ else <Bar>
+				\   let w:long_line_match = matchadd('ErrorMsg', '\%>80v.\+', -1) <Bar>
+				\ endif<CR>
+
+	nnoremap <silent> <Leader>s
+		\ :if exists('g:Highlight_problematic_spaces') <Bar>
+			\ silent! call matchdelete(g:Highlight_problematic_spaces) <Bar>
+			\ unlet g:Highlight_problematic_spaces <Bar>
+			\ set nolist <Bar>
+		\ else <Bar>
+			\ let g:Highlight_problematic_spaces = 1 <Bar>
+			\ set list <Bar>
+		\ endif<CR>
 
 	" The following two lines conflict with moving to top and bottom of the
 	" screen
@@ -198,12 +198,12 @@
 	nmap <leader>f8 :set foldlevel=8<CR>
 	nmap <leader>f9 :set foldlevel=9<CR>
 
-    "clearing highlighted search
-    nmap <silent> <leader>/ :nohlsearch<CR>
+	"clearing highlighted search
+	nmap <silent> <leader>/ :nohlsearch<CR>
 
 	" Shortcuts
 	" Change Working Directory to that of the current file
-    cmap cwd lcd %:p:h
+	cmap cwd lcd %:p:h
 	cmap cd. lcd %:p:h
 
 	" visual shifting (does not exit Visual mode)
@@ -268,7 +268,7 @@
 	" }
 	
 	" Command-t {
-        let g:CommandTSearchPath = $HOME . '/Code'
+		let g:CommandTSearchPath = $HOME . '/Code'
 	" }
 
 	" OmniComplete {
@@ -297,7 +297,7 @@
 		inoremap <expr> <C-d>	   pumvisible() ? "\<PageDown>\<C-p>\<C-n>" : "\<C-d>"
 		inoremap <expr> <C-u>      pumvisible() ? "\<PageUp>\<C-p>\<C-n>" : "\<C-u>"
 
-        " and make sure that it doesn't break supertab
+		" and make sure that it doesn't break supertab
 		let g:SuperTabCrMapping = 0
 
 		" automatically open and close the popup menu / preview window
@@ -309,7 +309,7 @@
 		au FileType * let b:delimitMate_autoclose = 1
 
 		" If using html auto complete (complete closing tag)
-        au FileType xml,html,xhtml let b:delimitMate_matchpairs = "(:),[:],{:}"
+		au FileType xml,html,xhtml let b:delimitMate_matchpairs = "(:),[:],{:}"
 	" }
 	
 	" AutoCloseTag {
@@ -341,76 +341,76 @@
 " }
 
 " GUI Settings {
-if has("gui_running")
-   " set default size: 90x35
-   set columns=90
-   set lines=35
-   " No menus and no toolbar
-   set guioptions-=m
-   set guioptions-=T
-   " set transparency=5          " Make the window slightly transparent
-   let g:obviousModeInsertHi = "guibg=Black guifg=White"
-else
-   let g:obviousModeInsertHi = "ctermfg=253 ctermbg=16"
-endif
+	if has("gui_running")
+		" set default size: 90x35
+		set columns=90
+		set lines=35
+		" No menus and no toolbar
+		set guioptions-=m
+		set guioptions-=T
+		" set transparency=5          " Make the window slightly transparent
+		let g:obviousModeInsertHi = "guibg=Black guifg=White"
+	else
+		let g:obviousModeInsertHi = "ctermfg=253 ctermbg=16"
+	endif
 
-if has("win32") || has("win64")
-   set guifont=Envy\ Code\ R:h12.5
-   let Tlist_Ctags_Cmd = 'e:\Tools\ctags.exe'
-   set directory=$TMP
-   if !has("gui_running")
-      colorscheme slate
-   end
-elseif has("mac")
-   set directory=/tmp
-   set guifont=Envy\ Code\ R:h14
-else
-   set directory=/tmp
-   set guifont=Envy\ Code\ R\ 14
-endif
+	if has("win32") || has("win64")
+		set guifont=Envy\ Code\ R:h12.5
+		let Tlist_Ctags_Cmd = 'e:\Tools\ctags.exe'
+		set directory=$TMP
+		if !has("gui_running")
+			colorscheme slate
+	end
+	elseif has("mac")
+		set directory=/tmp
+		set guifont=Envy\ Code\ R:h14
+	else
+		set directory=/tmp
+		set guifont=Envy\ Code\ R\ 14
+	endif
 " }
 
 function! InitializeDirectories()
-  let separator = "."
-  let parent = $HOME 
-  let prefix = '.vim'
-  let dir_list = { 
-			  \ 'backup': 'backupdir', 
-			  \ 'views': 'viewdir', 
-			  \ 'swap': 'directory' }
+	let separator = "."
+	let parent = $HOME 
+	let prefix = '.vim'
+	let dir_list = { 
+			\ 'backup': 'backupdir', 
+			\ 'views': 'viewdir', 
+			\ 'swap': 'directory' }
 
-  for [dirname, settingname] in items(dir_list)
-	  let directory = parent . '/' . prefix . dirname . "/"
-	  if exists("*mkdir")
-		  if !isdirectory(directory)
-			  call mkdir(directory)
-		  endif
-	  endif
-	  if !isdirectory(directory)
-		  echo "Warning: Unable to create backup directory: " . directory
-		  echo "Try: mkdir -p " . directory
-	  else  
-          let directory = substitute(directory, " ", "\\\\ ", "")
-          exec "set " . settingname . "=" . directory
-	  endif
-  endfor
+	for [dirname, settingname] in items(dir_list)
+		let directory = parent . '/' . prefix . dirname . "/"
+		if exists("*mkdir")
+			if !isdirectory(directory)
+				call mkdir(directory)
+			endif
+		endif
+		if !isdirectory(directory)
+			echo "Warning: Unable to create backup directory: " . directory
+			echo "Try: mkdir -p " . directory
+		else
+			let directory = substitute(directory, " ", "\\\\ ", "")
+			exec "set " . settingname . "=" . directory
+		endif
+	endfor
 endfunction
 call InitializeDirectories() 
 
 function! NERDTreeInitAsNeeded()
-    redir => bufoutput
-    buffers!
-    redir END
-    let idx = stridx(bufoutput, "NERD_tree")
-    if idx > -1
-        NERDTreeMirror
-        NERDTreeFind
-        wincmd l
-    endif
+	redir => bufoutput
+	buffers!
+	redir END
+	let idx = stridx(bufoutput, "NERD_tree")
+	if idx > -1
+		NERDTreeMirror
+		NERDTreeFind
+		wincmd l
+	endif
 endfunction
 
 " Use local vimrc if available {
-    if filereadable(expand("~/.vimrc.local"))
-        source ~/.vimrc.local
-    endif
+	if filereadable(expand("~/.vimrc.local"))
+		source ~/.vimrc.local
+	endif
 " }
