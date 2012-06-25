@@ -106,8 +106,12 @@ Bundle 'gmarik/vundle'
     :vmap <leader>f y:let @/=escape(@", '\\[]$^*.')<CR>:set hls<CR>:silent Ggrep -F "<C-R>=escape(@", '\\"#')<CR>"<CR>:ccl<CR>:cw<CR><CR>
 
     Bundle 'scrooloose/syntastic'
+    let g:syntastic_check_on_open=0
     let g:syntastic_enable_signs=1
     let g:syntastic_auto_loc_list=1
+    let g:syntastic_mode_map = { 'mode': 'active',
+                               \ 'active_filetypes': ['ruby', 'php'],
+                               \ 'passive_filetypes': ['puppet','c','c++'] }
 
     " --
 
