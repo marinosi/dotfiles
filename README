@@ -1,10 +1,24 @@
 README
 ------
 
-A collection of dotfiles for personal use. Enjoy --
+A collection of dotfiles for personal use.
 
-Instructions:
-git clone https://marinosi@github.com/marinosi/dotfiles.git
-cd dotfiles
-git submodule init
-git submodule update
+Enjoy--
+
+# Fetch the project:
+    git clone git://marinosi@github.com/marinosi/dotfiles.git
+
+VIM instructions:
+-----------------
+
+# Create necessary directories
+    cd dotfiles
+    mkdir -p .vim/bundle .vim/tmp/{backup,swap,undo}
+
+# Setup vundle
+    git clone https://github.com/gmarik/vundle.git .vim/bundle/vundle
+
+# local.vimrc to override default configuration.
+
+# Install plugins:
+    vim +BundleInstall +qall
