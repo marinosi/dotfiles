@@ -5,6 +5,7 @@
 "
 "
 
+set t_Co=256
 set nocompatible
 filetype off
 
@@ -14,6 +15,7 @@ if filereadable(expand("~/.vim/before.vimrc"))
 endif
 " }}}
 
+let os = substitute(system('uname'), "\n", "", "")
 let mapleader = ","
 let maplocalleader = "\\"
 
@@ -89,6 +91,13 @@ Bundle 'gmarik/vundle'
     Bundle 'majutsushi/tagbar' 
     nmap <leader>t :TagbarToggle<CR>
 
+    if os == "FreeBSD"
+        let g:tagbar_ctags_bin="/usr/local/bin/exctags"
+    elseif os == "Darwin"
+        let g:tagbar_ctags_bin="/opt/local/bin/ctags"
+    endif
+
+
     Bundle 'gregsexton/gitv'
 
     Bundle 'scrooloose/nerdcommenter' 
@@ -104,6 +113,8 @@ Bundle 'gmarik/vundle'
     nmap <leader>f :let @/="\\<<C-R><C-W>\\>"<CR>:set hls<CR>:silent Ggrep -w "<C-R><C-W>"<CR>:ccl<CR>:cw<CR><CR>
     " same in visual mode
     :vmap <leader>f y:let @/=escape(@", '\\[]$^*.')<CR>:set hls<CR>:silent Ggrep -F "<C-R>=escape(@", '\\"#')<CR>"<CR>:ccl<CR>:cw<CR><CR>
+    " Autoclean fugitive buffers when hidden
+    autocmd BufReadPost fugitive://* set bufhidden=delete
 
     Bundle 'scrooloose/syntastic'
     let g:syntastic_check_on_open=0
@@ -186,6 +197,8 @@ nmap ; :<CR>
 " Emacs bindings in command line mode
 cnoremap <c-a> <home>
 cnoremap <c-e> <end>
+cnoremap <c-b> <S-Left>
+cnoremap <c-f> <S-Right>
 
 " Source current line
 vnoremap <leader>L y:execute @@<cr>
@@ -206,6 +219,11 @@ iabbrev marinosi@ marinosi@ceid.upatras.gr
 " . }}}
 
 " Settings {{{
+"
+" FileTypes
+autocmd FileType c set tw=80 noexpandtab
+"
+" General Options
 set autoread 
 set backspace=indent,eol,start
 set binary
@@ -240,12 +258,16 @@ set noeol
 set relativenumber
 set numberwidth=10
 set ruler 
-set shell=/bin/zsh 
 set showcmd 
-
 set matchtime=2
 
 set completeopt=longest,menuone,preview
+
+if os == "FreeBSD"
+    set shell=/usr/local/bin/zsh
+else
+    set shell=/bin/zsh
+endif
 
 " White characters {{{
 set autoindent
