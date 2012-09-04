@@ -15,6 +15,7 @@ if filereadable(expand("~/.vim/before.vimrc"))
 endif
 " }}}
 
+set shell=/bin/sh
 let os = substitute(system('uname'), "\n", "", "")
 let mapleader = ","
 let maplocalleader = "\\"
