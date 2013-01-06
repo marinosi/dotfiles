@@ -580,8 +580,24 @@ fi
 bindkey -e
 # use vi style:
 # bindkey -v
+## <alt> + <Arrow Keys>
+#bindkey "\e\e[D" backward-word
+#bindkey "\e\e[C" forward-word
+bindkey "$terminfo[kcub1]" backward-word
+bindkey "$terminfo[kcuf1]" forward-word
 
-#if [[ "$TERM" == screen ]] ; then
+# Instead moving back a whole path, move to the previous /. WORDCHARS is local
+# here in order to not break killing words.
+my-backward-word() {
+  local WORDCHARS="${WORDCHARS:s@/@}"
+  zle backward-word
+}
+zle -N my-backward-word
+
+bindkey "^b" my-backward-word
+bindkey "^f" forward-word
+
+if [[ "$TERM" == screen ]] ; then
 bindkey '\e[1~' beginning-of-line       # home
 bindkey '\e[4~' end-of-line             # end
 bindkey '\e[A'  up-line-or-search       # cursor up
@@ -594,7 +610,7 @@ bindkey '^xP'   history-beginning-search-forward
 # if terminal type is set to 'rxvt':
 bindkey '\e[7~' beginning-of-line       # home
 bindkey '\e[8~' end-of-line             # end
-#fi
+fi
 
 # insert unicode character
 # usage example: 'ctrl-x i' 00A7 'ctrl-x i' will give you an §
