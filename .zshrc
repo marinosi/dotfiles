@@ -581,10 +581,8 @@ bindkey -e
 # use vi style:
 # bindkey -v
 ## <alt> + <Arrow Keys>
-#bindkey "\e\e[D" backward-word
-#bindkey "\e\e[C" forward-word
-bindkey "$terminfo[kcub1]" backward-word
-bindkey "$terminfo[kcuf1]" forward-word
+bindkey "\e\e[D" backward-word
+bindkey "\e\e[C" forward-word
 
 # Instead moving back a whole path, move to the previous /. WORDCHARS is local
 # here in order to not break killing words.
