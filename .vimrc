@@ -1,13 +1,16 @@
 " vimrc
-" Original Author: Zaiste! <oh@zaiste.net>
-" Original Source: https://github.com/zaiste/vimified
-" Contributed by Ilias Marinos <marinosi@ceid.upatras.gr>
-"
+" Main Author: Zaiste! <oh@zaiste.net>
+" Contributed: Ilias Marinos
 "
 
 set t_Co=256
 set nocompatible
-filetype off
+filetype on
+"filetype off
+
+" Utils {{{
+source ~/.vim/functions/util.vim
+" }}}
 
 " Load external configuration before anything else {{{
 if filereadable(expand("~/.vim/before.vimrc"))
@@ -15,7 +18,6 @@ if filereadable(expand("~/.vim/before.vimrc"))
 endif
 " }}}
 
-set shell=/bin/sh
 let os = substitute(system('uname'), "\n", "", "")
 let mapleader = ","
 let maplocalleader = "\\"
@@ -27,8 +29,17 @@ if filereadable(s:localrc)
 endif
 " }}}
 
+" PACKAGE LIST {{{
+" Use this variable inside your local configuration to declare
+" which package you would like to include
+if ! exists('g:vimified_packages')
+    let g:vimified_packages = ['general', 'fancy', 'os', 'coding', 'python', 'clang', 'ruby', 'html', 'css', 'color']
+endif
+" }}}
+
 " VUNDLE {{{
-set rtp+=~/.vim/bundle/vundle/
+let s:bundle_path=$HOME."/.vim/bundle/"
+execute "set rtp+=".s:bundle_path."vundle/"
 call vundle#rc()
 
 Bundle 'gmarik/vundle'
@@ -36,11 +47,21 @@ Bundle 'gmarik/vundle'
 
 " PACKAGES {{{
 
-" _. General {{{
-    Bundle "mileszs/ack.vim"
-    nnoremap <leader>a :Ack!<space>
+" Install user-supplied Bundles {{{
+let s:extrarc = expand($HOME . '/.vim/extra.vimrc')
+if filereadable(s:extrarc)
+    exec ':so ' . s:extrarc
+endif
+" }}}
 
-    Bundle 'matthias-guenther/hammer.vim' 
+" _. General {{{
+if count(g:vimified_packages, 'general')
+    Bundle 'editorconfig/editorconfig-vim'
+
+    Bundle 'rking/ag.vim'
+    nnoremap <leader>a :Ag -i<space>
+
+    Bundle 'matthias-guenther/hammer.vim'
     nmap <leader>p :Hammer<cr>
 
     Bundle 'tsaleh/vim-align'
@@ -49,243 +70,340 @@ Bundle 'gmarik/vundle'
     Bundle 'tpope/vim-speeddating'
     Bundle 'tpope/vim-surround'
     Bundle 'tpope/vim-unimpaired'
-    Bundle 'scrooloose/nerdtree' 
-    nmap <C-u> :NERDTreeToggle<CR>
+    Bundle 'maxbrunsfeld/vim-yankstack'
+    Bundle 'tpope/vim-eunuch'
+
+    Bundle 'scrooloose/nerdtree'
+    nmap <C-i> :NERDTreeToggle<CR>
     " Disable the scrollbars (NERDTree)
     set guioptions-=r
     set guioptions-=L
+    " Keep NERDTree window fixed between multiple toggles
+    set winfixwidth
+
 
     Bundle 'kana/vim-textobj-user'
     Bundle 'vim-scripts/YankRing.vim'
     let g:yankring_replace_n_pkey = '<leader>['
     let g:yankring_replace_n_nkey = '<leader>]'
-    let g:yankring_history_dir = '~/.vim/tmp'
+    let g:yankring_history_dir = '~/.vim/tmp/'
     nmap <leader>y :YRShow<cr>
 
     Bundle 'michaeljsmith/vim-indent-object'
     let g:indentobject_meaningful_indentation = ["haml", "sass", "python", "yaml", "markdown"]
 
-    Bundle 'mirell/vim-matchit'
+    Bundle 'Spaceghost/vim-matchit'
     Bundle 'kien/ctrlp.vim'
+    let g:ctrlp_working_path_mode = ''
+
     Bundle 'vim-scripts/scratch.vim'
 
-    Bundle 'vim-scripts/bufexplorer.zip'
+    Bundle 'troydm/easybuffer.vim'
+    nmap <leader>be :EasyBufferToggle<enter>
+
+    Bundle 'terryma/vim-multiple-cursors'
+endif
 " }}}
 
 " _. Fancy {{{
-    Bundle 'Lokaltog/vim-powerline'
-    let g:Powerline_symbols = 'fancy'
-    let g:Powerline_cache_enabled = 1
+if count(g:vimified_packages, 'fancy')
+    call g:check_defined('g:airline_left_sep', '')
+    call g:check_defined('g:airline_right_sep', '')
+    call g:check_defined('g:airline_branch_prefix', '')
+
+    Bundle 'bling/vim-airline'
+endif
+" }}}
+
+" _. Indent {{{
+if count(g:vimified_packages, 'indent')
+  Bundle 'Yggdroot/indentLine'
+  set list lcs=tab:\|\
+  let g:indentLine_color_term = 111
+  let g:indentLine_color_gui = '#DADADA'
+  let g:indentLine_char = 'c'
+  "let g:indentLine_char = '∙▹¦'
+  let g:indentLine_char = '∙'
+endif
 " }}}
 
 " _. OS {{{
+if count(g:vimified_packages, 'os')
     Bundle 'zaiste/tmux.vim'
-    Bundle 'benmills/vimux' 
-    map <Leader>rp :PromptVimTmuxCommand<CR>
-    map <Leader>rl :RunLastVimTmuxCommand<CR>
+    Bundle 'benmills/vimux'
+    map <Leader>rp :VimuxPromptCommand<CR>
+    map <Leader>rl :VimuxRunLastCommand<CR>
 
-    vmap <LocalLeader>rs "vy :call RunVimTmuxCommand(@v . "\n", 0)<CR>
-    nmap <LocalLeader>rs vip<LocalLeader>rs<CR>
+    map <LocalLeader>d :call VimuxRunCommand(@v, 0)<CR>
+endif
 " }}}
 
 " _. Coding {{{
-    Bundle 'majutsushi/tagbar' 
+
+if count(g:vimified_packages, 'coding')
+    Bundle 'majutsushi/tagbar'
     nmap <leader>t :TagbarToggle<CR>
-
-    if os == "FreeBSD"
-        let g:tagbar_ctags_bin="/usr/local/bin/exctags"
-    elseif os == "Darwin"
-        let g:tagbar_ctags_bin="/opt/local/bin/ctags"
-    endif
-
 
     Bundle 'gregsexton/gitv'
 
-    Bundle 'scrooloose/nerdcommenter' 
+    Bundle 'joonty/vdebug.git'
+
+    Bundle 'scrooloose/nerdcommenter'
     nmap <leader># :call NERDComment(0, "invert")<cr>
     vmap <leader># :call NERDComment(0, "invert")<cr>
 
     " - Bundle 'msanders/snipmate.vim'
     Bundle 'sjl/splice.vim'
 
-    Bundle 'tpope/vim-fugitive' 
+    Bundle 'tpope/vim-fugitive'
     nmap <leader>g :Ggrep
     " ,f for global git serach for word under the cursor (with highlight)
     nmap <leader>f :let @/="\\<<C-R><C-W>\\>"<CR>:set hls<CR>:silent Ggrep -w "<C-R><C-W>"<CR>:ccl<CR>:cw<CR><CR>
     " same in visual mode
     :vmap <leader>f y:let @/=escape(@", '\\[]$^*.')<CR>:set hls<CR>:silent Ggrep -F "<C-R>=escape(@", '\\"#')<CR>"<CR>:ccl<CR>:cw<CR><CR>
-    " Autoclean fugitive buffers when hidden
-    autocmd BufReadPost fugitive://* set bufhidden=delete
 
     Bundle 'scrooloose/syntastic'
-    let g:syntastic_check_on_open=0
+    "let g:syntastic_check_on_open=0
     let g:syntastic_enable_signs=1
     let g:syntastic_auto_loc_list=1
-    let g:syntastic_mode_map = { 'mode': 'active',
-                               \ 'active_filetypes': ['ruby', 'php'],
-                               \ 'passive_filetypes': ['puppet','c','c++'] }
+    let g:syntastic_mode_map = { 'mode': 'passive', 'active_filetypes': ['ruby'], 'passive_filetypes': ['html', 'css', 'slim', 'c'] }
 
     " --
 
+    Bundle 'vim-scripts/Reindent'
+
     autocmd FileType gitcommit set tw=68 spell
+    autocmd FileType gitcommit setlocal foldmethod=manual
+endif
+" }}}
+
+" _. Python {{{
+if count(g:vimified_packages, 'python')
+    Bundle 'klen/python-mode'
+    Bundle 'python.vim'
+    Bundle 'python_match.vim'
+    Bundle 'pythoncomplete'
+endif
 " }}}
 
 " _. Ruby {{{
+if count(g:vimified_packages, 'ruby')
     Bundle 'vim-ruby/vim-ruby'
     Bundle 'tpope/vim-rails'
     Bundle 'nelstrom/vim-textobj-rubyblock'
     Bundle 'ecomba/vim-ruby-refactoring'
 
     autocmd FileType ruby,eruby,yaml set tw=80 ai sw=2 sts=2 et
+    autocmd FileType ruby,eruby,yaml setlocal foldmethod=manual
+    autocmd User Rails set tabstop=2 shiftwidth=2 softtabstop=2 expandtab
+endif
+" }}}
+
+" _. Golang {{{
+    Bundle 'jnwhiteh/vim-golang'
+" }}}
+
+" _. Clang {{{
+if count(g:vimified_packages, 'clang')
+    Bundle 'Valloric/YouCompleteMe'
+endif
 " }}}
 
 " _. HTML {{{
+if count(g:vimified_packages, 'html')
     Bundle 'tpope/vim-haml'
     Bundle 'juvenn/mustache.vim'
     Bundle 'tpope/vim-markdown'
-    Bundle 'Ampersandy/sparkup'
+    Bundle 'digitaltoad/vim-jade'
+    Bundle 'slim-template/vim-slim'
+
+    au BufNewFile,BufReadPost *.jade setl shiftwidth=2 tabstop=2 softtabstop=2 expandtab
+    au BufNewFile,BufReadPost *.html setl shiftwidth=2 tabstop=2 softtabstop=2 expandtab
+    au BufNewFile,BufReadPost *.slim setl shiftwidth=2 tabstop=2 softtabstop=2 expandtab
+endif
 " }}}
 
-" _. Haskell {{{
-    Bundle 'Twinside/vim-syntax-haskell-cabal'
-    Bundle 'lukerandall/haskellmode-vim'
-
-    au BufEnter *.hs compiler ghc
-
-    let g:ghc = "/usr/local/bin/ghc"
-    let g:haddock_browser = "open"
+" _. CSS {{{
+if count(g:vimified_packages, 'css')
+    Bundle 'wavded/vim-stylus'
+    Bundle 'lunaru/vim-less'
+    nnoremap ,m :w <BAR> !lessc % > %:t:r.css<CR><space>
+endif
 " }}}
 
 " _. Color {{{
+if count(g:vimified_packages, 'color')
     Bundle 'sjl/badwolf'
     Bundle 'altercation/vim-colors-solarized'
     Bundle 'tomasr/molokai'
     Bundle 'zaiste/Atom'
+    Bundle 'w0ng/vim-hybrid'
+    Bundle 'chriskempson/base16-vim'
+    Bundle 'Elive/vim-colorscheme-elive'
+    Bundle 'zeis/vim-kolor'
+
+    " During installation the badwolf colorscheme might not be avalable
+    if filereadable(globpath(&rtp, 'colors/badwolf.vim'))
+      colorscheme badwolf
+    else
+      colorscheme default
+    endif
+else
+    colorscheme default
+endif
+" }}}
+
 " }}}
 
 " General {{{
 filetype plugin indent on
-colorscheme badwolf 
+
 syntax on
+
+" Set 5 lines to the cursor - when moving vertically
+set scrolloff=0
+
+" It defines where to look for the buffer user demanding (current window, all
+" windows in other tabs, or nowhere, i.e. open file from scratch every time) and
+" how to open the buffer (in the new split, tab, or in the current window).
+
+" This orders Vim to open the buffer.
+set switchbuf=useopen
 
 " Highlight VCS conflict markers
 match ErrorMsg '^\(<\|=\|>\)\{7\}\([^=].\+\)\?$'
 
 " }}}
 
-
 " Mappings {{{
 
-map Y y$
+" Unmap arrow keys
+noremap <left> <nop>
+noremap <up> <nop>
+noremap <down> <nop>
+noremap <right> <nop>
 
-" bracket match using tab
-map <tab> %
+" Yank from current cursor position to end of line
+map Y y$
+" Yank content in OS's clipboard. `o` stands for "OS's Clipoard".
+vnoremap <leader>yo "*y
+" Paste content from OS's clipboard
+nnoremap <leader>po "*p
 
 " clear highlight after search
 noremap <silent><Leader>/ :nohls<CR>
 
 " better ESC
-inoremap jk <Esc>
+inoremap <C-k> <Esc>
 
-nmap <silent> <leader>h :set invhlsearch<CR>
-nmap <silent> <leader>l :set invlist<CR>
-nmap <silent> <leader>n :set invnumber<CR>
-nmap <silent> <leader>p :set invpaste<CR>
-nmap <silent> <leader>i :set invrelativenumber<CR>
+nmap <silent> <leader>hh :set invhlsearch<CR>
+nmap <silent> <leader>ll :set invlist<CR>
+nmap <silent> <leader>nn :set invnumber<CR>
+nmap <silent> <leader>pp :set invpaste<CR>
+nmap <silent> <leader>ii :set invrelativenumber<CR>
 
-nmap ; :<CR>
+" Seriously, guys. It's not like :W is bound to anything anyway.
+command! W :w
 
 " Emacs bindings in command line mode
 cnoremap <c-a> <home>
 cnoremap <c-e> <end>
-cnoremap <c-b> <S-Left>
-cnoremap <c-f> <S-Right>
 
 " Source current line
 vnoremap <leader>L y:execute @@<cr>
-" Source visual selection 
+" Source visual selection
 nnoremap <leader>L ^vg_y:execute @@<cr>
 
-" w!! to write a file as sudo
-" stolen from Steve Losh
-cmap w!! w !sudo tee % >/dev/null
+" Fast saving and closing current buffer without closing windows displaying the
+" buffer
+nmap <leader>wq :w!<cr>:Bclose<cr>
 
 " }}}
 
 " . abbrevs {{{
 "
-iabbrev liak@ marinosi@FreeBSD.org
-iabbrev marinosi@ marinosi@ceid.upatras.gr
+iabbrev i@ Ilias.Marinos@cl.cam.ac.uk
 
 " . }}}
 
 " Settings {{{
-"
-" FileTypes
-autocmd FileType c set tw=80 noexpandtab
-"
-" General Options
-set autoread 
+set autoread
 set backspace=indent,eol,start
 set binary
 set cinoptions=:0,(s,u0,U1,g0,t0
 set completeopt=menuone,preview
-set hidden 
-set history=1000
-set incsearch 
-set laststatus=2 
-set list
 set encoding=utf-8
+set hidden
+set history=1000
+set incsearch
+set laststatus=2
+set list
+set nofoldenable
+
+" Don't redraw while executing macros
+set nolazyredraw
+
 " Disable the macvim toolbar
 set guioptions-=T
 
-set listchars=tab:▸\ ,eol:¬,extends:❯,precedes:❮
+set listchars=tab:▸\ ,eol:¬,extends:❯,precedes:❮,trail:␣
 set showbreak=↪
 
 set notimeout
 set ttimeout
 set ttimeoutlen=10
 
-" _ backups {{{ 
-set undodir=~/.vim/tmp/undo//     " undo files
+" _ backups {{{
+if has('persistent_undo')
+  set undodir=~/.vim/tmp/undo//     " undo files
+  set undofile
+  set undolevels=3000
+  set undoreload=10000
+endif
 set backupdir=~/.vim/tmp/backup// " backups
 set directory=~/.vim/tmp/swap//   " swap files
-set backup 
-set noswapfile 
+set backup
+set noswapfile
 " _ }}}
 
-set modelines=0 
+set modelines=0
 set noeol
-set relativenumber
-set numberwidth=10
-set ruler 
-set showcmd 
+if exists('+relativenumber')
+  set relativenumber
+endif
+set numberwidth=3
+set winwidth=83
+set ruler
+if executable('zsh')
+  set shell=zsh\ -l
+endif
+set showcmd
+
+set exrc
+set secure
+
 set matchtime=2
 
 set completeopt=longest,menuone,preview
 
-if os == "FreeBSD"
-    set shell=/usr/local/bin/zsh
-else
-    set shell=/bin/zsh
-endif
-
 " White characters {{{
 set autoindent
-set tabstop=4 
-set textwidth=80
-set shiftwidth=4 
+set tabstop=4
 set softtabstop=4
+set textwidth=80
+set shiftwidth=4
 set expandtab
-set wrap 
+set wrap
 set formatoptions=qrn1
-set colorcolumn=+1
+if exists('+colorcolumn')
+  set colorcolumn=+1
+endif
 " }}}
 
-set visualbell 
+set visualbell
 
-set wildignore=.svn,CVS,.git,.hg,*.o,*.a,*.class,*.mo,*.la,*.so,*.obj,*.swp,*.jpg,*.png,*.xpm,*.gif,.DS_Store,*.aux,*.out,*.toc
-set wildmenu 
+set wildignore=.svn,CVS,.git,.hg,*.o,*.a,*.class,*.mo,*.la,*.so,*.obj,*.swp,*.jpg,*.png,*.xpm,*.gif,.DS_Store,*.aux,*.out,*.toc,tmp,*.scssc
+set wildmenu
 
 set dictionary=/usr/share/dict/words
 " }}}
@@ -294,8 +412,11 @@ set dictionary=/usr/share/dict/words
 
 " Save when losing focus
 au FocusLost    * :silent! wall
+"
+" When vimrc is edited, reload it
+autocmd! BufWritePost vimrc source ~/.vimrc
 
-
+" }}}
 
 " Cursorline {{{
 " Only show cursorline in the current window and in normal mode.
@@ -312,9 +433,18 @@ augroup END
 " Only shown when not in insert mode so I don't go insane.
 augroup trailing
     au!
-    au InsertEnter * :set listchars-=trail:⌴
-    au InsertLeave * :set listchars+=trail:⌴
+    au InsertEnter * :set listchars-=trail:␣
+    au InsertLeave * :set listchars+=trail:␣
 augroup END
+
+" Remove trailing whitespaces when saving
+" Wanna know more? http://vim.wikia.com/wiki/Remove_unwanted_spaces
+" If you want to remove trailing spaces when you want, so not automatically,
+" see
+" http://vim.wikia.com/wiki/Remove_unwanted_spaces#Display_or_remove_unwanted_whitespace_with_a_script.
+autocmd BufWritePre * :%s/\s\+$//e
+
+" }}}
 
 " . searching {{{
 
@@ -322,16 +452,16 @@ augroup END
 nnoremap / /\v
 vnoremap / /\v
 
-set ignorecase 
+set ignorecase
 set smartcase
-set showmatch 
+set showmatch
 set gdefault
 set hlsearch
 
 " clear search matching
 noremap <leader><space> :noh<cr>:call clearmatches()<cr>
 
-" Don't jump when using * for search 
+" Don't jump when using * for search
 nnoremap * *<c-o>
 
 " Keep search matches in the middle of the window.
@@ -345,7 +475,20 @@ nnoremap g, g,zz
 " Open a Quickfix window for the last search.
 nnoremap <silent> <leader>? :execute 'vimgrep /'.@/.'/g %'<CR>:copen<CR>
 
-" Begining & End of line in Normal mode 
+" Highlight word {{{
+
+nnoremap <silent> <leader>hh :execute 'match InterestingWord1 /\<<c-r><c-w>\>/'<cr>
+nnoremap <silent> <leader>h1 :execute 'match InterestingWord1 /\<<c-r><c-w>\>/'<cr>
+nnoremap <silent> <leader>h2 :execute '2match InterestingWord2 /\<<c-r><c-w>\>/'<cr>
+nnoremap <silent> <leader>h3 :execute '3match InterestingWord3 /\<<c-r><c-w>\>/'<cr>
+
+" }}}
+
+" }}}
+
+" Navigation & UI {{{
+
+" Begining & End of line in Normal mode
 noremap H ^
 noremap L g_
 
@@ -355,15 +498,19 @@ nnoremap k gk
 vnoremap j gj
 vnoremap k gk
 
-" Easy buffer navigation
+" Easy splitted window navigation
 noremap <C-h>  <C-w>h
 noremap <C-j>  <C-w>j
 noremap <C-k>  <C-w>k
 noremap <C-l>  <C-w>l
 
+" Easy buffer navigation
+noremap <leader>bp :bprevious<cr>
+noremap <leader>bn :bnext<cr>
+
 " Splits ,v and ,h to open new splits (vertical and horizontal)
 nnoremap <leader>v <C-w>v<C-w>l
-nnoremap <leader>s <C-w>s<C-w>j
+nnoremap <leader>h <C-w>s<C-w>j
 
 " Reselect visual block after indent/outdent
 vnoremap < <gv
@@ -375,23 +522,16 @@ nmap <C-Down> ]e
 vmap <C-Up> [egv
 vmap <C-Down> ]egv
 
-" Highlight word {{{
-
-nnoremap <silent> <leader>hh :execute 'match InterestingWord1 /\<<c-r><c-w>\>/'<cr>
-nnoremap <silent> <leader>h1 :execute 'match InterestingWord1 /\<<c-r><c-w>\>/'<cr>
-nnoremap <silent> <leader>h2 :execute '2match InterestingWord2 /\<<c-r><c-w>\>/'<cr>
-nnoremap <silent> <leader>h3 :execute '3match InterestingWord3 /\<<c-r><c-w>\>/'<cr>
-" }}}
-
 " }}}
 
 " . folding {{{
 
 set foldlevelstart=0
+set foldmethod=syntax
 
 " Space to toggle folds.
-nnoremap <Enter> za
-vnoremap <Enter> za
+nnoremap <space> za
+vnoremap <space> za
 
 " Make zO recursively open whatever top level fold we're in, no matter where the
 " cursor happens to be.
@@ -400,25 +540,8 @@ nnoremap zO zCzO
 " Use ,z to "focus" the current fold.
 nnoremap <leader>z zMzvzz
 
-function! MyFoldText() " {{{
-    let line = getline(v:foldstart)
-
-    let nucolwidth = &fdc + &number * &numberwidth
-    let windowwidth = winwidth(0) - nucolwidth - 3
-    let foldedlinecount = v:foldend - v:foldstart
-
-    " expand tabs into spaces
-    let onetab = strpart('          ', 0, &tabstop)
-    let line = substitute(line, '\t', onetab, 'g')
-
-    let line = strpart(line, 0, windowwidth - 2 -len(foldedlinecount))
-    let fillcharcount = windowwidth - len(line) - len(foldedlinecount)
-    return line . '…' . repeat(" ",fillcharcount) . foldedlinecount . '…' . ' '
-endfunction " }}}
-set foldtext=MyFoldText()
-
 " }}}
-"
+
 " Quick editing {{{
 
 nnoremap <leader>ev <C-w>s<C-w>j:e $MYVIMRC<cr>
@@ -427,8 +550,6 @@ nnoremap <leader>eg <C-w>s<C-w>j:e ~/.gitconfig<cr>
 nnoremap <leader>ez <C-w>s<C-w>j:e ~/.zshrc<cr>
 nnoremap <leader>et <C-w>s<C-w>j:e ~/.tmux.conf<cr>
 
-" }}}
-
 " --------------------
 
 set ofu=syntaxcomplete#Complete
@@ -436,30 +557,11 @@ let g:rubycomplete_buffer_loading = 0
 let g:rubycomplete_classes_in_global = 1
 
 " showmarks
-let g:showmarks_enable = 1 
+let g:showmarks_enable = 1
 hi! link ShowMarksHLl LineNr
 hi! link ShowMarksHLu LineNr
 hi! link ShowMarksHLo LineNr
 hi! link ShowMarksHLm LineNr
-
-" delimitMate REMOVE?
-let g:delimitMate_expand_space = 1
-let g:delimitMate_expand_cr = 1
-
-" sessionman REMOVE?
-nmap <leader>S :SessionList<CR>
-nmap <leader>SS :SessionSave<CR>
-nmap <leader>SA :SessionSaveAs<CR>
-
-" minibufexpl REMOVE?
-let g:miniBufExplVSplit = 25
-let g:miniBufExplorerMoreThanOne = 100
-let g:miniBufExplUseSingleClick = 1
-nmap <Leader>b :MiniBufExplorer<cr>
-
-
-" Fugitive
-
 
 " }}}
 
@@ -476,21 +578,19 @@ augroup END
 " EXTENSIONS {{{
 
 " _. Scratch {{{
+source ~/.vim/functions/scratch_toggle.vim
+" }}}
 
-command! ScratchToggle call ScratchToggle()
+" _. Buffer Handling {{{
+source ~/.vim/functions/buffer_handling.vim
+" }}}
 
-function! ScratchToggle()
-    if exists("w:is_scratch_window")
-        unlet w:is_scratch_window
-        exec "q"
-    else
-        exec "normal! :Sscratch\<cr>\<C-W>J:resize 13\<cr>"
-        let w:is_scratch_window = 1
-    endif
-endfunction
+" _. Tab {{{
+source ~/.vim/functions/insert_tab_wrapper.vim
+" }}}
 
-nnoremap <silent> <leader><tab> :ScratchToggle<cr>
-
+" _. Text Folding {{{
+source ~/.vim/functions/my_fold_text.vim
 " }}}
 
 " _. Gist {{{
