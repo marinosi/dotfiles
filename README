@@ -11,8 +11,9 @@ Enjoy--
 VIM instructions:
 -----------------
 
-# Copy .vim to $HOME
-    cp ~/git/projects/dotfiles/.vim ~
+# Copy .vimrc and .vim/ to $HOME
+    cp ~/git/projects/dotfiles/.vimrc ~
+    cp -r ~/git/projects/dotfiles/.vim ~
 
 # Create necessary directories
     mkdir -p ~/.vim/bundle ~/.vim/tmp/{backup,swap,undo}
