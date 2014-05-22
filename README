@@ -11,9 +11,11 @@ Enjoy--
 VIM instructions:
 -----------------
 
+# Copy .vim to $HOME
+    cp ~/git/projects/dotfiles/.vim ~
+
 # Create necessary directories
-    cd dotfiles
-    mkdir -p .vim/bundle .vim/tmp/{backup,swap,undo}
+    mkdir -p ~/.vim/bundle ~/.vim/tmp/{backup,swap,undo}
 
 # Setup vundle
     git clone https://github.com/gmarik/vundle.git .vim/bundle/vundle
@@ -22,3 +24,7 @@ VIM instructions:
 
 # Install plugins:
     vim +BundleInstall +qall
+
+# Extra for "Valloric/YouCompleteMe"
+    cd ~/.vim/bundle/YouCompleteMe
+    ./install.sh --clang-completer

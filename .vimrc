@@ -33,7 +33,7 @@ endif
 " Use this variable inside your local configuration to declare
 " which package you would like to include
 if ! exists('g:vimified_packages')
-    let g:vimified_packages = ['general', 'fancy', 'os', 'coding', 'python', 'clang', 'ruby', 'html', 'css', 'color']
+    let g:vimified_packages = ['general', 'fancy', 'os', 'coding', 'python', 'html', 'color']
 endif
 " }}}
 
@@ -107,9 +107,9 @@ endif
 
 " _. Fancy {{{
 if count(g:vimified_packages, 'fancy')
-    call g:check_defined('g:airline_left_sep', '')
-    call g:check_defined('g:airline_right_sep', '')
-    call g:check_defined('g:airline_branch_prefix', '')
+    call g:Check_defined('g:airline_left_sep', '')
+    call g:Check_defined('g:airline_right_sep', '')
+    call g:Check_defined('g:airline_branch_prefix', '')
 
     Bundle 'bling/vim-airline'
 endif
@@ -146,14 +146,12 @@ if count(g:vimified_packages, 'coding')
 
     Bundle 'gregsexton/gitv'
 
-    Bundle 'joonty/vdebug.git'
-
     Bundle 'scrooloose/nerdcommenter'
     nmap <leader># :call NERDComment(0, "invert")<cr>
     vmap <leader># :call NERDComment(0, "invert")<cr>
 
     " - Bundle 'msanders/snipmate.vim'
-    Bundle 'sjl/splice.vim'
+    "Bundle 'sjl/splice.vim'
 
     Bundle 'tpope/vim-fugitive'
     nmap <leader>g :Ggrep
@@ -162,14 +160,7 @@ if count(g:vimified_packages, 'coding')
     " same in visual mode
     :vmap <leader>f y:let @/=escape(@", '\\[]$^*.')<CR>:set hls<CR>:silent Ggrep -F "<C-R>=escape(@", '\\"#')<CR>"<CR>:ccl<CR>:cw<CR><CR>
 
-    Bundle 'scrooloose/syntastic'
-    "let g:syntastic_check_on_open=0
-    let g:syntastic_enable_signs=1
-    let g:syntastic_auto_loc_list=1
-    let g:syntastic_mode_map = { 'mode': 'passive', 'active_filetypes': ['ruby'], 'passive_filetypes': ['html', 'css', 'slim', 'c'] }
-
-    " --
-
+    Bundle 'Valloric/YouCompleteMe'
     Bundle 'vim-scripts/Reindent'
 
     autocmd FileType gitcommit set tw=68 spell
@@ -203,23 +194,13 @@ endif
     Bundle 'jnwhiteh/vim-golang'
 " }}}
 
-" _. Clang {{{
-if count(g:vimified_packages, 'clang')
-    Bundle 'Valloric/YouCompleteMe'
-endif
-" }}}
 
 " _. HTML {{{
 if count(g:vimified_packages, 'html')
     Bundle 'tpope/vim-haml'
-    Bundle 'juvenn/mustache.vim'
     Bundle 'tpope/vim-markdown'
-    Bundle 'digitaltoad/vim-jade'
-    Bundle 'slim-template/vim-slim'
 
-    au BufNewFile,BufReadPost *.jade setl shiftwidth=2 tabstop=2 softtabstop=2 expandtab
     au BufNewFile,BufReadPost *.html setl shiftwidth=2 tabstop=2 softtabstop=2 expandtab
-    au BufNewFile,BufReadPost *.slim setl shiftwidth=2 tabstop=2 softtabstop=2 expandtab
 endif
 " }}}
 
@@ -354,12 +335,12 @@ set ttimeout
 set ttimeoutlen=10
 
 " _ backups {{{
-if has('persistent_undo')
-  set undodir=~/.vim/tmp/undo//     " undo files
-  set undofile
-  set undolevels=3000
-  set undoreload=10000
-endif
+"if has('persistent_undo')
+  "set undodir=~/.vim/tmp/undo//     " undo files
+  "set undofile
+  "set undolevels=3000
+  "set undoreload=10000
+"endif
 set backupdir=~/.vim/tmp/backup// " backups
 set directory=~/.vim/tmp/swap//   " swap files
 set backup
