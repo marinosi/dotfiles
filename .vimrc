@@ -33,7 +33,7 @@ endif
 " Use this variable inside your local configuration to declare
 " which package you would like to include
 if ! exists('g:vimified_packages')
-    let g:vimified_packages = ['general', 'fancy', 'os', 'coding', 'python', 'html', 'color']
+    let g:vimified_packages = ['general', 'fancy', 'os', 'coding', 'indent', 'python', 'html', 'color']
 endif
 " }}}
 
@@ -102,6 +102,8 @@ if count(g:vimified_packages, 'general')
     nmap <leader>be :EasyBufferToggle<enter>
 
     Bundle 'terryma/vim-multiple-cursors'
+    Bundle 'sjl/gundo.vim'
+    nmap <leader>z :GundoToggle<CR>
 endif
 " }}}
 
@@ -110,8 +112,9 @@ if count(g:vimified_packages, 'fancy')
     call g:Check_defined('g:airline_left_sep', '')
     call g:Check_defined('g:airline_right_sep', '')
     call g:Check_defined('g:airline_branch_prefix', '')
-
     Bundle 'bling/vim-airline'
+    "let g:airline_powerline_fonts = 1
+    "let g:airline#extensions#tabline#enabled = 1
 endif
 " }}}
 
@@ -121,9 +124,10 @@ if count(g:vimified_packages, 'indent')
   set list lcs=tab:\|\
   let g:indentLine_color_term = 111
   let g:indentLine_color_gui = '#DADADA'
-  let g:indentLine_char = 'c'
+  "let g:indentLine_char = 'c'
   "let g:indentLine_char = '∙▹¦'
-  let g:indentLine_char = '∙'
+  "let g:indentLine_char = '∙'
+  let g:indentLine_char = '¦'
 endif
 " }}}
 
@@ -241,6 +245,7 @@ filetype plugin indent on
 
 syntax on
 
+
 " Set 5 lines to the cursor - when moving vertically
 set scrolloff=0
 
@@ -335,12 +340,12 @@ set ttimeout
 set ttimeoutlen=10
 
 " _ backups {{{
-"if has('persistent_undo')
-  "set undodir=~/.vim/tmp/undo//     " undo files
-  "set undofile
-  "set undolevels=3000
-  "set undoreload=10000
-"endif
+if has('persistent_undo')
+  set undodir=~/.vim/tmp/undo//     " undo files
+  set undofile
+  set undolevels=3000
+  set undoreload=10000
+endif
 set backupdir=~/.vim/tmp/backup// " backups
 set directory=~/.vim/tmp/swap//   " swap files
 set backup
@@ -519,7 +524,7 @@ vnoremap <space> za
 nnoremap zO zCzO
 
 " Use ,z to "focus" the current fold.
-nnoremap <leader>z zMzvzz
+"nnoremap <leader>z zMzvzz
 
 " }}}
 
