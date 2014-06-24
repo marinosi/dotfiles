@@ -177,7 +177,7 @@ if count(g:vimified_packages, 'python')
     Bundle 'klen/python-mode'
     Bundle 'python.vim'
     Bundle 'python_match.vim'
-    Bundle 'pythoncomplete'
+    "Bundle 'pythoncomplete'
 endif
 " }}}
 
@@ -226,6 +226,7 @@ if count(g:vimified_packages, 'color')
     Bundle 'chriskempson/base16-vim'
     Bundle 'Elive/vim-colorscheme-elive'
     Bundle 'zeis/vim-kolor'
+    Bundle 'morhetz/gruvbox'
 
     " During installation the badwolf colorscheme might not be avalable
     if filereadable(globpath(&rtp, 'colors/badwolf.vim'))
