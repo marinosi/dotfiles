@@ -194,6 +194,7 @@ if count(g:vimified_packages, 'coding')
     "
     Bundle 'Valloric/YouCompleteMe'
     let g:ycm_global_ycm_extra_conf = '~/.ycm_extra_conf.py'
+    let g:ycm_enable_diagnostic_signs = 0
 
     Bundle 'vim-scripts/Reindent'
 
