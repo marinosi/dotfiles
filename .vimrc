@@ -3,8 +3,11 @@
 " Contributed: Ilias Marinos
 "
 
-set t_Co=256
+if $TERM == "xterm-256color" || $TERM == "screen-256color"
+    set t_Co=256
+endif
 set nocompatible
+set background=dark
 filetype on
 "filetype off
 
@@ -72,6 +75,8 @@ if count(g:vimified_packages, 'general')
     Bundle 'tpope/vim-unimpaired'
     Bundle 'maxbrunsfeld/vim-yankstack'
     Bundle 'tpope/vim-eunuch'
+    Bundle 'brookhong/cscope.vim'
+    nnoremap <leader>\ :call ToggleLocationList()<CR>
 
     Bundle 'scrooloose/nerdtree'
     nmap <C-i> :NERDTreeToggle<CR>
@@ -113,8 +118,28 @@ if count(g:vimified_packages, 'fancy')
     call g:Check_defined('g:airline_right_sep', '')
     call g:Check_defined('g:airline_branch_prefix', '')
     Bundle 'bling/vim-airline'
+    let g:airline#extensions#whitespace#checks = [ 'indent', 'trailing' ]
+    let g:airline#extensions#whitespace#mixed_indent_algo = 1
     "let g:airline_powerline_fonts = 1
     "let g:airline#extensions#tabline#enabled = 1
+    "
+    "Bundle 'itchyny/lightline.vim'
+    "let g:lightline = {
+      "\ 'colorscheme': 'wombat',
+      "\ 'component': {
+      "\   'readonly': '%{&readonly?"⭤":""}',
+      "\ }
+      "\ }
+    "let g:lightline = {
+          "\ 'colorscheme': 'wombat',
+          "\ 'component': {
+          "\   'readonly': '%{&readonly?"⭤":""}',
+          "\ },
+          "\ 'separator': { 'left': '⮀', 'right': '⮂' },
+          "\ 'subseparator': { 'left': '⮁', 'right': '⮃' }
+          "\ }
+
+    "Bundle 'edkolev/tmuxline.vim'
 endif
 " }}}
 
@@ -164,7 +189,12 @@ if count(g:vimified_packages, 'coding')
     " same in visual mode
     :vmap <leader>f y:let @/=escape(@", '\\[]$^*.')<CR>:set hls<CR>:silent Ggrep -F "<C-R>=escape(@", '\\"#')<CR>"<CR>:ccl<CR>:cw<CR><CR>
 
+    Bundle 'airblade/vim-gitgutter'
+    "Bundle 'mhinz/vim-signify'
+    "
     Bundle 'Valloric/YouCompleteMe'
+    let g:ycm_global_ycm_extra_conf = '~/.ycm_extra_conf.py'
+
     Bundle 'vim-scripts/Reindent'
 
     autocmd FileType gitcommit set tw=68 spell
@@ -578,6 +608,10 @@ source ~/.vim/functions/insert_tab_wrapper.vim
 
 " _. Text Folding {{{
 source ~/.vim/functions/my_fold_text.vim
+" }}}
+
+" _. Text Folding {{{
+source ~/.vim/functions/quickfix_toggle.vim
 " }}}
 
 " _. Gist {{{
