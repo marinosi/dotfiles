@@ -8,6 +8,7 @@ if $TERM == "xterm-256color" || $TERM == "screen-256color"
 endif
 set nocompatible
 set background=dark
+set clipboard=unnamed
 filetype on
 "filetype off
 
