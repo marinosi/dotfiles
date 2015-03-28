@@ -36,8 +36,8 @@ endif
 " PACKAGE LIST {{{
 " Use this variable inside your local configuration to declare
 " which package you would like to include
-if ! exists('g:vimified_packages')
-    let g:vimified_packages = ['general', 'fancy', 'os', 'coding', 'indent', 'python', 'html', 'color']
+if ! exists('g:vim_packages')
+	let g:vim_packages = ['general', 'fancy', 'os', 'coding', 'indent', 'python', 'html', 'color']
 endif
 " }}}
 
@@ -51,30 +51,16 @@ Bundle 'gmarik/vundle'
 
 " PACKAGES {{{
 
-" Install user-supplied Bundles {{{
-let s:extrarc = expand($HOME . '/.vim/extra.vimrc')
-if filereadable(s:extrarc)
-    exec ':so ' . s:extrarc
-endif
-" }}}
-
 " _. General {{{
-if count(g:vimified_packages, 'general')
+if count(g:vim_packages, 'general')
     Bundle 'editorconfig/editorconfig-vim'
 
     Bundle 'rking/ag.vim'
     nnoremap <leader>a :Ag -i<space>
 
-    Bundle 'matthias-guenther/hammer.vim'
-    nmap <leader>p :Hammer<cr>
-
-    Bundle 'tsaleh/vim-align'
-    Bundle 'tpope/vim-endwise'
     Bundle 'tpope/vim-repeat'
     Bundle 'tpope/vim-speeddating'
-    Bundle 'tpope/vim-surround'
     Bundle 'tpope/vim-unimpaired'
-    Bundle 'maxbrunsfeld/vim-yankstack'
     Bundle 'tpope/vim-eunuch'
     Bundle 'brookhong/cscope.vim'
     nnoremap <leader>\ :call ToggleLocationList()<CR>
@@ -87,22 +73,45 @@ if count(g:vimified_packages, 'general')
     " Keep NERDTree window fixed between multiple toggles
     set winfixwidth
 
-
-    Bundle 'kana/vim-textobj-user'
     Bundle 'vim-scripts/YankRing.vim'
     let g:yankring_replace_n_pkey = '<leader>['
     let g:yankring_replace_n_nkey = '<leader>]'
     let g:yankring_history_dir = '~/.vim/tmp/'
     nmap <leader>y :YRShow<cr>
 
-    Bundle 'michaeljsmith/vim-indent-object'
-    let g:indentobject_meaningful_indentation = ["haml", "sass", "python", "yaml", "markdown"]
-
-    Bundle 'Spaceghost/vim-matchit'
+    Bundle 'FelikZ/ctrlp-py-matcher'
     Bundle 'kien/ctrlp.vim'
-    let g:ctrlp_working_path_mode = ''
+    if has('python')
+        let g:ctrlp_match_func = { 'match': 'pymatcher#PyMatch' }
+    endif
+    let g:ctrlp_match_window = 'bottom,order:ttb'
+    let g:ctrlp_working_path_mode = 'ra'
+    if executable("ag")
+        set grepprg=ag\ --nogroup\ --nocolor
+        let g:ctrlp_user_command = 'ag %s -i --nocolor --nogroup --hidden
+              \ --ignore .git
+              \ --ignore .svn
+              \ --ignore .hg
+              \ --ignore .DS_Store
+              \ -g ""'
+    endif
+    let g:ctrlp_lazy_update = 350
+    " Do not clear filenames cache, to improve CtrlP startup
+    " You can manualy clear it by <F5>
+    let g:ctrlp_clear_cache_on_exit = 0
+    " Set no file limit, we are building a big project
+    let g:ctrlp_max_files = 0
+    "let g:ctrlp_user_command = 'ag %s -l --nocolor --hidden -g ""'
+    " won't work if globpath() is not used (aka g:ctrlp_user_command is set)
+    "set wildignore+=*/tmp/*,*.so,*.swp,*.zip
+    "let g:ctrlp_custom_ignore = {
+        "\ 'dir':  '\v[\/]\.(git|hg|svn)$',
+        "\ 'file': '\v\.(exe|so|dll)$',
+        "\ 'link': 'SOME_BAD_SYMBOLIC_LINKS',
+        "\ }
 
-    Bundle 'vim-scripts/scratch.vim'
+
+    Bundle 'mtth/scratch.vim'
 
     Bundle 'troydm/easybuffer.vim'
     nmap <leader>be :EasyBufferToggle<enter>
@@ -114,15 +123,18 @@ endif
 " }}}
 
 " _. Fancy {{{
-if count(g:vimified_packages, 'fancy')
+if count(g:vim_packages, 'fancy')
     call g:Check_defined('g:airline_left_sep', '')
     call g:Check_defined('g:airline_right_sep', '')
-    call g:Check_defined('g:airline_branch_prefix', '')
+    "call g:Check_defined('g:airline_symbols.branch', '')
     Bundle 'bling/vim-airline'
+    "let g:airline_symbols.branch = ''
+    let g:airline_theme = 'dark'
+    "let g:airline_theme = 'molokai'
     let g:airline#extensions#whitespace#checks = [ 'indent', 'trailing' ]
     let g:airline#extensions#whitespace#mixed_indent_algo = 1
-    "let g:airline_powerline_fonts = 1
-    "let g:airline#extensions#tabline#enabled = 1
+    let g:airline_powerline_fonts = 0
+    let g:airline#extensions#tabline#enabled = 0
     "
     "Bundle 'itchyny/lightline.vim'
     "let g:lightline = {
@@ -140,12 +152,12 @@ if count(g:vimified_packages, 'fancy')
           "\ 'subseparator': { 'left': '⮁', 'right': '⮃' }
           "\ }
 
-    "Bundle 'edkolev/tmuxline.vim'
+    Bundle 'edkolev/tmuxline.vim'
 endif
 " }}}
 
 " _. Indent {{{
-if count(g:vimified_packages, 'indent')
+if count(g:vim_packages, 'indent')
   Bundle 'Yggdroot/indentLine'
   set list lcs=tab:\|\
   let g:indentLine_color_term = 111
@@ -158,7 +170,7 @@ endif
 " }}}
 
 " _. OS {{{
-if count(g:vimified_packages, 'os')
+if count(g:vim_packages, 'os')
     Bundle 'zaiste/tmux.vim'
     Bundle 'benmills/vimux'
     map <Leader>rp :VimuxPromptCommand<CR>
@@ -169,8 +181,7 @@ endif
 " }}}
 
 " _. Coding {{{
-
-if count(g:vimified_packages, 'coding')
+if count(g:vim_packages, 'coding')
     Bundle 'majutsushi/tagbar'
     nmap <leader>t :TagbarToggle<CR>
 
@@ -179,9 +190,6 @@ if count(g:vimified_packages, 'coding')
     Bundle 'scrooloose/nerdcommenter'
     nmap <leader># :call NERDComment(0, "invert")<cr>
     vmap <leader># :call NERDComment(0, "invert")<cr>
-
-    " - Bundle 'msanders/snipmate.vim'
-    "Bundle 'sjl/splice.vim'
 
     Bundle 'tpope/vim-fugitive'
     nmap <leader>g :Ggrep
@@ -197,32 +205,17 @@ if count(g:vimified_packages, 'coding')
     let g:ycm_global_ycm_extra_conf = '~/.ycm_extra_conf.py'
     let g:ycm_enable_diagnostic_signs = 0
 
-    Bundle 'vim-scripts/Reindent'
-
     autocmd FileType gitcommit set tw=68 spell
     autocmd FileType gitcommit setlocal foldmethod=manual
 endif
 " }}}
 
 " _. Python {{{
-if count(g:vimified_packages, 'python')
+if count(g:vim_packages, 'python')
     Bundle 'klen/python-mode'
     Bundle 'python.vim'
     Bundle 'python_match.vim'
     "Bundle 'pythoncomplete'
-endif
-" }}}
-
-" _. Ruby {{{
-if count(g:vimified_packages, 'ruby')
-    Bundle 'vim-ruby/vim-ruby'
-    Bundle 'tpope/vim-rails'
-    Bundle 'nelstrom/vim-textobj-rubyblock'
-    Bundle 'ecomba/vim-ruby-refactoring'
-
-    autocmd FileType ruby,eruby,yaml set tw=80 ai sw=2 sts=2 et
-    autocmd FileType ruby,eruby,yaml setlocal foldmethod=manual
-    autocmd User Rails set tabstop=2 shiftwidth=2 softtabstop=2 expandtab
 endif
 " }}}
 
@@ -232,7 +225,7 @@ endif
 
 
 " _. HTML {{{
-if count(g:vimified_packages, 'html')
+if count(g:vim_packages, 'html')
     Bundle 'tpope/vim-haml'
     Bundle 'tpope/vim-markdown'
 
@@ -240,16 +233,8 @@ if count(g:vimified_packages, 'html')
 endif
 " }}}
 
-" _. CSS {{{
-if count(g:vimified_packages, 'css')
-    Bundle 'wavded/vim-stylus'
-    Bundle 'lunaru/vim-less'
-    nnoremap ,m :w <BAR> !lessc % > %:t:r.css<CR><space>
-endif
-" }}}
-
 " _. Color {{{
-if count(g:vimified_packages, 'color')
+if count(g:vim_packages, 'color')
     Bundle 'sjl/badwolf'
     Bundle 'altercation/vim-colors-solarized'
     Bundle 'tomasr/molokai'
@@ -411,7 +396,8 @@ set tabstop=4
 set softtabstop=4
 set textwidth=80
 set shiftwidth=4
-set expandtab
+"set expandtab
+set noexpandtab
 set wrap
 set formatoptions=qrn1
 if exists('+colorcolumn')
@@ -598,10 +584,6 @@ augroup END
 
 " _. Scratch {{{
 source ~/.vim/functions/scratch_toggle.vim
-" }}}
-
-" _. Buffer Handling {{{
-source ~/.vim/functions/buffer_handling.vim
 " }}}
 
 " _. Tab {{{
