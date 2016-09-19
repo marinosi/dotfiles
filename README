@@ -7,6 +7,9 @@ Enjoy--
 
 # Fetch the project:
     git clone git://marinosi@github.com/marinosi/dotfiles.git
+    
+# For ZSH configuration check:
+    http://github.com/marinosi/prezto
 
 VIM instructions:
 -----------------
