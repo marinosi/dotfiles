@@ -62,8 +62,8 @@ if count(g:vim_packages, 'general')
     Bundle 'tpope/vim-speeddating'
     Bundle 'tpope/vim-unimpaired'
     Bundle 'tpope/vim-eunuch'
-    Bundle 'brookhong/cscope.vim'
-    nnoremap <leader>\ :call ToggleLocationList()<CR>
+    "Bundle 'brookhong/cscope.vim'
+    "nnoremap <leader>\ :call ToggleLocationList()<CR>
 
     Bundle 'scrooloose/nerdtree'
     nmap <C-i> :NERDTreeToggle<CR>
@@ -152,7 +152,7 @@ if count(g:vim_packages, 'fancy')
           "\ 'subseparator': { 'left': '⮁', 'right': '⮃' }
           "\ }
 
-    Bundle 'edkolev/tmuxline.vim'
+    "Bundle 'edkolev/tmuxline.vim'
 endif
 " }}}
 
@@ -201,9 +201,9 @@ if count(g:vim_packages, 'coding')
     Bundle 'airblade/vim-gitgutter'
     "Bundle 'mhinz/vim-signify'
     "
-    Bundle 'Valloric/YouCompleteMe'
-    let g:ycm_global_ycm_extra_conf = '~/.ycm_extra_conf.py'
-    let g:ycm_enable_diagnostic_signs = 0
+    "Bundle 'Valloric/YouCompleteMe'
+    "let g:ycm_global_ycm_extra_conf = '~/.ycm_extra_conf.py'
+    "let g:ycm_enable_diagnostic_signs = 0
 
     autocmd FileType gitcommit set tw=68 spell
     autocmd FileType gitcommit setlocal foldmethod=manual
@@ -235,19 +235,22 @@ endif
 
 " _. Color {{{
 if count(g:vim_packages, 'color')
-    Bundle 'sjl/badwolf'
-    Bundle 'altercation/vim-colors-solarized'
-    Bundle 'tomasr/molokai'
-    Bundle 'zaiste/Atom'
-    Bundle 'w0ng/vim-hybrid'
-    Bundle 'chriskempson/base16-vim'
-    Bundle 'Elive/vim-colorscheme-elive'
-    Bundle 'zeis/vim-kolor'
-    Bundle 'morhetz/gruvbox'
+    "Bundle 'sjl/badwolf'
+    "Bundle 'altercation/vim-colors-solarized'
+    "Bundle 'tomasr/molokai'
+    "Bundle 'zaiste/Atom'
+    "Bundle 'w0ng/vim-hybrid'
+    "Bundle 'chriskempson/base16-vim'
+    "Bundle 'Elive/vim-colorscheme-elive'
+    "Bundle 'zeis/vim-kolor'
+    "Bundle 'morhetz/gruvbox'
+    Bundle 'flazz/vim-colorschemes'
 
     " During installation the badwolf colorscheme might not be avalable
-    if filereadable(globpath(&rtp, 'colors/badwolf.vim'))
-      colorscheme badwolf
+	if filereadable(globpath(&rtp, 'colors/badwolf.vim'))
+	  colorscheme badwolf
+    "if filereadable(globpath(&rtp, 'colors/solarized.vim'))
+      "colorscheme solarized
     else
       colorscheme default
     endif
@@ -374,6 +377,7 @@ set modelines=0
 set noeol
 if exists('+relativenumber')
   set relativenumber
+  set number
 endif
 set numberwidth=3
 set winwidth=83
